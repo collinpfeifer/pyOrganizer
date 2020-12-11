@@ -1,51 +1,60 @@
-import os, getpass, shutil, time, logging
+import os, pathlib, shutil, time, logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-
-class FileWatcher:
+class FileWatcher(FileSystemEventHandler):
     
     if not os.path.isdir("./GeneralFiles"):
         os.mkdir("./GeneralFiles")
 
-    destination_folder = "./GeneralFiles"
 
     if not os.path.isdir("./ImportantStuff"):
         os.mkdir("./ImportantStuff")
 
     monitor_folder = "./ImportantStuff"
+    destination_folder = "./GeneralFiles"
+
 
     def __init__(self):
         self.observer = Observer()
-
-    def folder_modified(self):
-
-        event_handler = Handler()
+        print("start")
+        
+            
+    def run(self):
+        event_handler = FileWatcher()
         self.observer.schedule(event_handler, self.monitor_folder, recursive=True)
+        
+        day_folder = " ".join(time.asctime().split()[:3])
+        month_folder = " ".join(time.asctime().split()[1:2])
+        year_folder = " ".join(time.asctime().split()[4:])
+
+        if not os.path.isdir("./" + self.destination_folder + "/" 
+        + year_folder):
+            os.mkdir("./" + self.destination_folder + "/" + year_folder)
+
+        if not os.path.isdir("./" + self.destination_folder + "/" + year_folder + "/" + month_folder):
+            os.mkdir("./" + self.destination_folder + "/" + year_folder + "/" + month_folder)
+
+        if not os.path.isdir("./" + self.destination_folder + "/" + year_folder + "/" + month_folder + "/" + day_folder):
+            os.mkdir("./" + self.destination_folder + "/" + year_folder + "/" + month_folder + "/" + day_folder)
+
         self.observer.start()
         try:
-          while True:
-              time.sleep(5)
-              for filename in os.listdir(self.monitor_folder):
-                src = monitor_folder + "/" + filename
-                destination = destination_folder + "/" + str(time.ctime(time.time()))
-                os.rename(src, destination)
+            while True:
+                for filename in os.listdir(self.monitor_folder):
+                    time.sleep(5)
+                    src = self.monitor_folder + "/" + filename
+
+                    destination = self.destination_folder + "/" + year_folder + "/" + month_folder + "/" + day_folder + "/" + str(time.asctime()) + str(pathlib.Path(filename).suffix)
+                    os.rename(src, destination)
+                
         except KeyboardInterrupt:
-                self.observer.stop()
-        
+            self.observer.stop()
+            print("observer stopped")
+
         self.observer.join()
-
-class Handler(FileSystemEventHandler):
-
-    @staticmethod
-    def on_any_event(self, event):
-        if event.is_directory:
-            return None
         
-    def on_modified(self, event):
-        print("Watchdog recieved a modified event")
-
 
 if __name__ == '__main__':
     watch = FileWatcher()
-    watch.folder_modified()
+    watch.run()
