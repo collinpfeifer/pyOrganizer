@@ -97,5 +97,5 @@ class FileWatcher(FileSystemEventHandler):
         self.observer.join()
         
 if __name__ == '__main__':
-    Handeler = FileWatcher()
-    Handeler.run()
+    Handler = FileWatcher()
+    Handler.run()
