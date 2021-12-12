@@ -3,7 +3,7 @@
 An automated organization tool developed for Python 3 with [watchdog](https://pythonhosted.org/watchdog/)
 
 ## Requirements
-This repository has included a requirements.txt file for all the required dependencies. A virtual environment is also reccomended for all python projects, but it is optional.
+This repository has included a requirements.txt file for all the required dependencies. A virtual environment is also recomended for all python projects, but it is optional.
 
 Virtual environment installation using [pip](https://pypi.org/project/pip/)
 
